@@ -13,6 +13,16 @@ require 'vendor/autoload.php';
 // Enable custom debug
 define('CUSTOM_DEBUG', true);
 
+if (!function_exists('vd')) {
+
+    function vd(...$vars) {
+        $trace = debug_backtrace();
+        print("Location ". $trace[0]['file'] .' in '. $trace[0]['line']);
+        $vars = $vars ?: ['stop point'];
+        dd(...$vars);
+    }
+}
+
 /**
  * Self-called anonymous function that creates its own scope and keeps the global namespace clean.
  */

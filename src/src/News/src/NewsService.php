@@ -20,7 +20,11 @@ class NewsService implements NewsServiceInterface
 
     }
 
-    public function findById(UuidInterface $id): News
+    /**
+     * @param UuidInterface $id
+     * @return News|null
+     */
+    public function findById(UuidInterface $id): ?News
     {
         return $this->getRepository()->findById($id);
     }
@@ -48,8 +52,10 @@ class NewsService implements NewsServiceInterface
     public function delete(UuidInterface $id): void
     {
         $news = $this->findById($id);
-        $this->em->remove($news);
-        $this->em->flush();
+        if (!is_null($news)) {
+            $this->em->remove($news);
+            $this->em->flush();
+        }
     }
 
 
