@@ -11,7 +11,7 @@ use Ramsey\Uuid\UuidInterface;
 interface NewsServiceInterface
 {
 
-    public function findById(UuidInterface $id): News;
+    public function findById(UuidInterface $id): ?News;
 
     public function findAll(int $page, int $limit): iterable;
 

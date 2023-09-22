@@ -24,6 +24,7 @@ class ConfigProvider
         return [
             'dependencies' => $this->getDependencies(),
             'doctrine'    => $this->getDoctrine(),
+            'limit' => 10
         ];
     }
 

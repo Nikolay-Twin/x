@@ -26,6 +26,7 @@ final class News
 
 
     #[ORM\Column(name: 'text', type: 'string')]
+    #[Assert\NotBlank]
     private string $text;
 
     
