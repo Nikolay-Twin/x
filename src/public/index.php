@@ -10,6 +10,9 @@ if (PHP_SAPI === 'cli-server' && $_SERVER['SCRIPT_FILENAME'] !== __FILE__) {
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
+// Enable custom debug
+define('CUSTOM_DEBUG', true);
+
 /**
  * Self-called anonymous function that creates its own scope and keeps the global namespace clean.
  */

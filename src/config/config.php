@@ -14,6 +14,8 @@ $cacheConfig = [
 ];
 
 $aggregator = new ConfigAggregator([
+    \Mezzio\Helper\ConfigProvider::class,
+    \Laminas\HttpHandlerRunner\ConfigProvider::class,
     // Include cache configuration
     new ArrayProvider($cacheConfig),
     ConfigProvider::class,

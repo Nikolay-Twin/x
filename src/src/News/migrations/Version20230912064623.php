@@ -7,6 +7,7 @@ namespace News\Migrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
+
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
@@ -30,7 +31,7 @@ final class Version20230912064623 extends AbstractMigration
         
         $newsTable->setPrimaryKey(['id']);
 
-        $newsTable->addIndex(['statuss']);
+        $newsTable->addIndex(['status']);
 
     }
 
