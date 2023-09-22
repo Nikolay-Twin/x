@@ -2,58 +2,105 @@ version: "3.9"
 
 services:
 
-  web:
-    container_name: xweb
-    image: nginx:1.23-alpine
+  nginx:
+    build:
+      context: ./docker/nginx
+    container_name: "${CONTAINER_PREFIX}_${CONTAINER_NAME}_nginx"
+    restart: always
     ports:
       - "80:80"
       - "443:443"
     volumes:
+      - "./docker/nginx/conf/nginx_${CONTAINER_PREFIX}.conf:/etc/nginx/conf.d/x_nginx.conf"
+      - ./docker/nginx/ssl:/etc/nginx/ssl
       - ./src:/var/www
-      - ./nginx/ssl:/etc/nginx/ssl
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/runtime/logs:/var/log/nginx
+    depends_on:
+      - php
     entrypoint: ["nginx-debug", "-g", "daemon off;"]
     networks:
       xweb:
         aliases:
           - x.not-real.ru
 
-  backend:
-    container_name: xbackend
+  php:
     build:
-      context: ./src
-      dockerfile: ./dockerfiles/Dockerfile
+      context: ./docker/php
       args:
         - WITH_XDEBUG=true
         - APP_ENV=${APP_ENV}
     env_file: .env
-    volumes:
-      - ./src:/var/www:rw
-    ports:
-      - "8080:8080"
+    container_name: "${CONTAINER_PREFIX}_${CONTAINER_NAME}_php"
+    restart: always
+    environment:
+      XDEBUG_CONFIG: "remote_host=192.168.220.1 remote_enable=1"
+      PHP_IDE_CONFIG: "serverName=Docker"
+      PHP_ENABLE_XDEBUG: 1
     depends_on:
       - postgres
-    networks:
-      xweb: 
-
-  postgres:
-    container_name: xpostgres
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
-      PGDATA: /var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     volumes:
-      - xpgdata:/var/lib/postgresql/data
+      - ./src:/var/www
+      - "${PHP_INI_DIR}/php.ini:/usr/local/etc/php/conf.d/xx-custom.ini"
+    ports:
+      - "8080:8080"
     networks:
       xweb:
+        aliases:
+          - x.not-real.ru
 
+  postgres:
+    env_file:
+      - .env
+    hostname: "${CONTAINER_PREFIX}_${CONTAINER_NAME}_postgres"
+    container_name: "${CONTAINER_PREFIX}_${CONTAINER_NAME}_postgres"
+    build:
+      context: docker/postgres
+      dockerfile: Dockerfile
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgre/data
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+      PGDATA: "/var/lib/postgre/data/pgdata"
+    networks:
+      xweb:
+        aliases:
+          - x.not-real.ru
+
+  pgadmin:
+    hostname: "${CONTAINER_PREFIX}_${CONTAINER_NAME}_postgres"
+    container_name: "${CONTAINER_PREFIX}_${CONTAINER_NAME}_pgadmin"
+    restart: always
+    build:
+      context: docker/pgadmin
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+      - PGADMIN_CONFIG_SERVER_MODE=True
+    ports:
+      - ${PGADMIN_PORT}:80
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin:/var/lib/pgadmin/data
+    networks:
+      xweb:
+        aliases:
+          - x.not-real.ru
+volumes:
+  src:
+    driver: local
+  pgdata:
+    driver: local
+  pgadmin:
+    driver: local
 
 networks:
   xweb:
-
-volumes:
-  xpgdata:
+    driver: bridge

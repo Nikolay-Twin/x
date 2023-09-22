@@ -106,14 +106,10 @@ COPY --from=composer:2.5 /usr/bin/composer /usr/bin/composer
 
 WORKDIR ${APP_PATH}
 
-COPY . ./
 
 #RUN set -eux; \
     #composer install --prefer-dist --no-dev --optimize-autoloader --classmap-authoritative --no-progress; \
 #	sync
-
-COPY ./dockerfiles/php-${APP_ENV}.ini /usr/local/etc/php/conf.d/custom-php.ini
-COPY ./dockerfiles/docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
 
 RUN set -eux; \
     chmod +x /usr/local/bin/docker-php-entrypoint;
