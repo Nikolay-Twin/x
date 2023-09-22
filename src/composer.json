@@ -70,7 +70,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Common\\": "common/",
+            "Common\\": "src/Common/",
             "App\\": "src/App/src/",
             "News\\": "src/News/src/"
         }
