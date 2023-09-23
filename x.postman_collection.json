@@ -1,0 +1,108 @@
+{
+	"info": {
+		"_postman_id": "dc23c9f8-2898-4000-a6c2-c882dcc1b3d0",
+		"name": "x",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/news",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://x.not-real.ru/news",
+					"protocol": "https",
+					"host": [
+						"x",
+						"not-real",
+						"ru"
+					],
+					"path": [
+						"news"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/news",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://x.not-real.ru/news",
+					"protocol": "https",
+					"host": [
+						"x",
+						"not-real",
+						"ru"
+					],
+					"path": [
+						"news"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/news",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://x.not-real.ru/news/12345",
+					"protocol": "https",
+					"host": [
+						"x",
+						"not-real",
+						"ru"
+					],
+					"path": [
+						"news",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/news",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "",
+						"type": "default",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://x.not-real.ru/news/018abee3-ffc9-70f7-96b1-2df58c66038b",
+					"protocol": "https",
+					"host": [
+						"x",
+						"not-real",
+						"ru"
+					],
+					"path": [
+						"news",
+						"018abee3-ffc9-70f7-96b1-2df58c66038b"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

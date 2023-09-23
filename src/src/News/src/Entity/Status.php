@@ -10,6 +10,5 @@ enum Status: int
 
     case Publicated = 1;
 
-
     case Deleted = -1;
 }

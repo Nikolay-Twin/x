@@ -14,7 +14,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
-class DeleteHandler implements RequestHandlerInterface
+final class DeleteHandler implements RequestHandlerInterface
 {
 
     public function __construct(
