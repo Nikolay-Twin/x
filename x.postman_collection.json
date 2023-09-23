@@ -27,9 +27,24 @@
 		},
 		{
 			"name": "/news",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\":\"Заголовок\",\n    \"text\":\"Текст\"\n}"
+				},
 				"url": {
 					"raw": "https://x.not-real.ru/news",
 					"protocol": "https",
@@ -68,28 +83,27 @@
 		},
 		{
 			"name": "/news",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true,
+					"host": true
+				}
+			},
 			"request": {
 				"method": "PUT",
 				"header": [
 					{
-						"key": "Cookie",
-						"value": "",
-						"type": "default",
-						"disabled": true
-					},
-					{
 						"key": "Content-Type",
 						"value": "application/json",
-						"type": "default",
-						"disabled": true
+						"type": "default"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": ""
+					"raw": "{\n    \"status\":1,\n    \"title\":\"Новый заголовок\",\n    \"text\": \"Новый текст\"\n}"
 				},
 				"url": {
-					"raw": "https://x.not-real.ru/news/018abee3-ffc9-70f7-96b1-2df58c66038b",
+					"raw": "https://x.not-real.ru/news/12345",
 					"protocol": "https",
 					"host": [
 						"x",
@@ -98,7 +112,7 @@
 					],
 					"path": [
 						"news",
-						"018abee3-ffc9-70f7-96b1-2df58c66038b"
+						"12345"
 					]
 				}
 			},
