@@ -105,6 +105,3 @@ networks:
   xweb:
     driver: bridge
 
-networks:
-	xweb:
-		driver: bridge
