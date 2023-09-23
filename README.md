@@ -1,4 +1,4 @@
-[Условия здесь]() 
+[Условия здесь](https://github.com/Nikolay-Twin/x/blob/master/TASK.md) 
 ## Задача 1. Развернуть окружение
 ### Usage
 
