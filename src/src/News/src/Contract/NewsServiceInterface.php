@@ -19,4 +19,5 @@ interface NewsServiceInterface
 
     public function delete(UuidInterface $id): void;
 
+    public function update(array $data): void;
 }

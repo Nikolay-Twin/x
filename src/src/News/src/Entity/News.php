@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace News\Entity;
 
-use DateTime;
+use Common\BaseEntity;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use News\Repository\NewsRepository;
@@ -13,7 +13,7 @@ use Ramsey\Uuid\UuidInterface;
 
 #[ORM\Entity(repositoryClass: NewsRepository::class)]
 #[ORM\Table(name: 'news')]
-final class News
+final class News extends BaseEntity
 {
 
     #[ORM\Id]
@@ -26,7 +26,6 @@ final class News
 
 
     #[ORM\Column(name: 'text', type: 'string')]
-    #[Assert\NotBlank]
     private string $text;
 
     
@@ -40,8 +39,7 @@ final class News
     public function __construct(
         string $title,
         string $text
-    )
-    {
+    ) {
         $this->id = Uuid::uuid7();
         $this->title = $title;
         $this->text = $text;
@@ -49,25 +47,62 @@ final class News
         $this->status = Status::Draft;
     }
 
-
+    /**
+     * @return UuidInterface
+     */
     public function getId(): UuidInterface
     {
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
+    /**
+     * @return string
+     */
     public function getText(): string
     {
         return $this->text;
     }
 
+    /**
+     * @return DateTimeImmutable
+     */
     public function getCreated(): DateTimeImmutable
     {
         return $this->created;
     }
 
+    /**
+     * @param Status $status
+     * @return void
+     */
+    public function changeStatus(Status $status): void
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @param string $title
+     * @return void
+     */
+    public function changeTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @param string $text
+     * @return void
+     */
+    public function changeText(string $text): void
+    {
+        $this->text = $text;
+    }
 }
