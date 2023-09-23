@@ -1,158 +1,108 @@
-{
-	"info": {
-		"_postman_id": "dc23c9f8-2898-4000-a6c2-c882dcc1b3d0",
-		"name": "x",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "/news",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://x.not-real.ru/news",
-					"protocol": "https",
-					"host": [
-						"x",
-						"not-real",
-						"ru"
-					],
-					"path": [
-						"news"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/news",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"host": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"title\":\"Заголовок\",\n    \"text\":\"Текст\"\n}"
-				},
-				"url": {
-					"raw": "https://x.not-real.ru/news",
-					"protocol": "https",
-					"host": [
-						"x",
-						"not-real",
-						"ru"
-					],
-					"path": [
-						"news"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/news",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "https://x.not-real.ru/news/12345",
-					"protocol": "https",
-					"host": [
-						"x",
-						"not-real",
-						"ru"
-					],
-					"path": [
-						"news",
-						"12345"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/news (soft)",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"soft\":true\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://x.not-real.ru/news/018abef4-45a6-726e-87c4-efd5299c4659",
-					"protocol": "https",
-					"host": [
-						"x",
-						"not-real",
-						"ru"
-					],
-					"path": [
-						"news",
-						"018abef4-45a6-726e-87c4-efd5299c4659"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/news",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true,
-					"host": true
-				}
-			},
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"status\":1,\n    \"title\":\"Новый заголовок\",\n    \"text\": \"Новый текст\"\n}"
-				},
-				"url": {
-					"raw": "https://x.not-real.ru/news/12345",
-					"protocol": "https",
-					"host": [
-						"x",
-						"not-real",
-						"ru"
-					],
-					"path": [
-						"news",
-						"12345"
-					]
-				}
-			},
-			"response": []
-		}
-	]
-}
+	@ -1,106 +1,158 @@
+	version: "3.9"
+
+	services:
+
+		nginx:
+			build:
+				context: ./docker/nginx
+			container_name: "${CONTAINER_PREFIX}_${CONTAINER_NAME}_nginx"
+			restart: always
+			ports:
+				- "80:80"
+				- "443:443"
+			volumes:
+				- "./docker/nginx/conf/nginx_${CONTAINER_PREFIX}.conf:/etc/nginx/conf.d/x_nginx.conf"
+				- ./docker/nginx/ssl:/etc/nginx/ssl
+				- ./src:/var/www
+				- ./docker/runtime/logs:/var/log/nginx
+			depends_on:
+				- php
+			entrypoint: ["nginx-debug", "-g", "daemon off;"]
+			networks:
+				xweb:
+					aliases:
+						- x.not-real.ru
+
+		php:
+			build:
+				context: ./docker/php
+				args:
+					- WITH_XDEBUG=true
+					- APP_ENV=${APP_ENV}
+			env_file: .env
+			container_name: "${CONTAINER_PREFIX}_${CONTAINER_NAME}_php"
+			restart: always
+			environment:
+				XDEBUG_CONFIG: "remote_host=192.168.220.1 remote_enable=1"
+				PHP_IDE_CONFIG: "serverName=Docker"
+				PHP_ENABLE_XDEBUG: 1
+			depends_on:
+				- postgres
+			volumes:
+				- ./src:/var/www
+				- "${PHP_INI_DIR}/php.ini:/usr/local/etc/php/conf.d/xx-custom.ini"
+			ports:
+				- "8080:8080"
+			networks:
+				xweb:
+					aliases:
+						- x.not-real.ru
+
+		postgres:
+			env_file:
+				- .env
+			hostname: "${CONTAINER_PREFIX}_${CONTAINER_NAME}_postgres"
+			container_name: "${CONTAINER_PREFIX}_${CONTAINER_NAME}_postgres"
+			build:
+				context: docker/postgres
+				dockerfile: Dockerfile
+			ports:
+				- "${DB_PORT}:5432"
+			volumes:
+				- pgdata:/var/lib/postgre/data
+			environment:
+				POSTGRES_PASSWORD: ${DB_PASS}
+				POSTGRES_USER: ${DB_USER}
+				POSTGRES_DB: ${DB_NAME}
+				PGDATA: "/var/lib/postgre/data/pgdata"
+			networks:
+				xweb:
+					aliases:
+						- x.not-real.ru
+
+		pgadmin:
+			hostname: "${CONTAINER_PREFIX}_${CONTAINER_NAME}_postgres"
+			container_name: "${CONTAINER_PREFIX}_${CONTAINER_NAME}_pgadmin"
+			restart: always
+			build:
+				context: docker/pgadmin
+				dockerfile: Dockerfile
+			env_file:
+				- .env
+			environment:
+				- PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+				- PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+				- PGADMIN_CONFIG_SERVER_MODE=True
+			ports:
+				- ${PGADMIN_PORT}:80
+			depends_on:
+				- postgres
+			volumes:
+				- pgadmin:/var/lib/pgadmin/data
+			networks:
+				xweb:
+					aliases:
+						- x.not-real.ru
+	volumes:
+		src:
+			driver: local
+		pgdata:
+			driver: local
+		pgadmin:
+			driver: local
+
+	networks:
+		xweb:
+			driver: bridge
+			
