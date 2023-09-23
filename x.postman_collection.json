@@ -28,9 +28,7 @@
 		{
 			"name": "/news",
 			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"host": true
-				}
+				"disabledSystemHeaders": {}
 			},
 			"request": {
 				"method": "POST",
@@ -102,7 +100,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://x.not-real.ru/news/018abef4-45a6-726e-87c4-efd5299c4659",
+					"raw": "https://x.not-real.ru/news/12345",
 					"protocol": "https",
 					"host": [
 						"x",
@@ -111,7 +109,7 @@
 					],
 					"path": [
 						"news",
-						"018abef4-45a6-726e-87c4-efd5299c4659"
+						"12345"
 					]
 				}
 			},
