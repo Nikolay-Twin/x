@@ -25,9 +25,10 @@ final class DeleteHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         try {
-            $id = $request->getAttribute('id');
-            $id = $this->validate($id);
-            $this->newsService->delete($id);
+            $data = $request->getParsedBody();
+            $id = $this->validate($request->getAttribute('id'));
+            $mode = !isset($data['soft']);
+            $this->newsService->delete($id, $mode);
         } catch (AppErrorException $e) {
             return new JsonResponse([
                 'status'  => 'error',

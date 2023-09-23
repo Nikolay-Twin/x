@@ -82,6 +82,42 @@
 			"response": []
 		},
 		{
+			"name": "/news (soft)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"soft\":true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://x.not-real.ru/news/018abef4-45a6-726e-87c4-efd5299c4659",
+					"protocol": "https",
+					"host": [
+						"x",
+						"not-real",
+						"ru"
+					],
+					"path": [
+						"news",
+						"018abef4-45a6-726e-87c4-efd5299c4659"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "/news",
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {

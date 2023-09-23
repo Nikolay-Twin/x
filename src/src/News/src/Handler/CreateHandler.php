@@ -31,8 +31,8 @@ final class CreateHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $data = $request->getParsedBody();
         try {
+            $data = $request->getParsedBody();
             $this->validate($data);
             $this->newsService->create($data['title'], $data['text']);
         } catch (AppErrorException $e) {
